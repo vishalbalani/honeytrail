@@ -262,8 +262,6 @@
                         <p>Software requirements:</p>
                         <ol>
                             <li>Operating system (e.g., Linux, Windows)</li>
-                            <li>Honeypot software (e.g., Honeyd, Dionaea, Cowrie)
-                            </li>
                             <li>Supporting software packages (e.g., Python, MySQL, Apache)</li>
                         </ol>
 
@@ -300,7 +298,7 @@
                         <!-- end row -->
 
                         <!-- <h4>Upload via WordPress Admin</h4> -->
-
+                        
                         <p>To download the HoneyTrail software, you can visit the project's official website at
                             www.honeytrail.org. The website provides instructions for downloading the latest version of
                             the software, as well as any necessary updates or patches.
@@ -350,31 +348,42 @@
                             </b></p>
                         <p>
                         <h2> Install the required software:</h2> Before you can install the HoneyTrail software, ensure
-                        that you have installed the necessary supporting software packages, such as Python, MySQL, and
-                        Apache. These packages may be required to run the HoneyTrail software, depending on your
-                        specific installation configuration.
-
+                        that you have updated all the libraries neccessary for the smooth working of the Honeypot.
+                        Get the updates using the following command:
                         </p>
                         <!-- <pre class="brush: html; highlight: [2,4]">
                             sudo apt update
 
                             </pre> -->
+                        <pre class="pre-scrollable">sudo apt-get update<code class="html"></code></pre>
 
-                        <pre class="pre-scrollable">sudo apt update<code class="html"></code></pre>
+                        Now update using the following command:
+                        <pre class="pre-scrollable">sudo apt-get upgrade<code class="html"></code></pre>
                         <p>
+                            Now that you have installed the necessary supporting software packages, such as Python, MySQL, and
+                        Apache. We will move on to the download and installation of the HoneyTrail software.
                         <h2> Download the HoneyTrail software:</h2> You can download the HoneyTrail software from the
                         official website or popular software repositories. Follow the instructions to download the
                         appropriate version of the software for your system.
-
+                        The dircetory you want to store the software in should be your current working directory.
+                        Check your current working directory using the following command:
+                        <pre class="pre-scrollable">pwd<code class="html"></code></pre>
+                        Paste the link in your terminal to download the software:
                         </p>
-                        <pre class="pre-scrollable">sudo apt update<code class="html"></code></pre>
+                        <pre class="pre-scrollable">git clone https://github.com/vishalbalani/honeytrail.git<code class="html"></code></pre>
                         <p>
                         <h2> Configure the honeypot:</h2> Once you have downloaded the HoneyTrail software, configure
                         the honeypot to mimic specific systems or services. This involves creating a virtual network
                         environment that emulates the behavior of real-world systems, such as servers or workstations.
-
+                        <p>NOTE:</p>
+                        <ol>
+                            <li>Disable root login and password authentication</li>
+                            <li>Set up a non-administrative user account for the honeypot</li>
+                            <li>Set up logging for SSH connections and authentication attempts</li>
+                            <li>Configure firewall rules to restrict access to the honeypot</li>
+                        </ol>
                         </p>
-                        <pre class="pre-scrollable">sudo apt update<code class="html"></code></pre>
+                        <!-- <pre class="pre-scrollable">sudo apt update<code class="html"></code></pre> -->
                         <p>
                         <h2> Configure logging and monitoring tools:</h2> To track network traffic and activity on the
                         honeypot, configure logging and monitoring tools to capture incoming network traffic, login
