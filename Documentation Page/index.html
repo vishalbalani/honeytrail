@@ -158,8 +158,7 @@
                                                 <br>
                                             </p>
 
-                                            <p>This documentation is to help you regarding Installation & Setup. Please
-                                                go through the documentation carefully. </p>
+                                            <p>Welcome to the HoneyTrail documentation page. Here, you will find all the information you need to get started with our platform, including guides, tutorials, and reference materials. Whether you are a beginner or an experienced user, this documentation will help you make the most of HoneyTrail's capabilities. We have designed our documentation to be clear, concise, and easy to follow, with step-by-step instructions and screenshots to guide you through each process. If you have any questions or issues while using HoneyTrail, our documentation is the first place to look for answers. </p>
 
 
                                             <div class="intro2 clearfix">
@@ -382,7 +381,12 @@
                             <li>Set up logging for SSH connections and authentication attempts</li>
                             <li>Configure firewall rules to restrict access to the honeypot</li>
                         </ol>
-                        </p>
+                        Now execute the following commands to start the honeypot on your ssh server:
+                        <pre class="pre-scrollable">pip3 install -r requirements.txt<code class="html"></code></pre>
+                        <br>
+                        <pre class="pre-scrollable">python3 honeypot.py<code class="html"></code></pre>
+                        
+                    </p>
                         <!-- <pre class="pre-scrollable">sudo apt update<code class="html"></code></pre> -->
                         <p>
                         <h2> Configure logging and monitoring tools:</h2> To track network traffic and activity on the
@@ -391,19 +395,23 @@
                         motivations of attackers, and help you identify potential security threats.
 
                         </p>
-                        <pre class="pre-scrollable">sudo apt update<code class="html"></code></pre>
+                        <pre class="pre-scrollable">python3 loganalyzer.py<code class="html"></code></pre>
                         <p>
-                        <h2> Implement security controls:</h2> To protect the honeypot from attackers and prevent
+                        <h2> Implement security controls:</h2> To protect the server from attackers and prevent
                         unauthorized access, implement security controls such as firewalls, intrusion detection systems,
-                        and access controls. These controls can help mitigate security risks and prevent attackers from
+                        and access controls other than HoneyTrail, a honeypot is not a sure shot method to maintain cybersecurity. These controls can help mitigate security risks and prevent attackers from
                         compromising your network.
 
                         </p>
-                        <pre class="pre-scrollable">sudo apt update<code class="html"></code></pre>
                         <p>
                         <h2> Test the honeypot:</h2> After you have configured the honeypot, test the system to ensure
                         that it is properly functioning and attracting potential attackers. Monitor the honeypot and
                         review the captured data to identify any potential security threats or vulnerabilities.
+                        Now we are going to behave like a client/potential attacker and try to connect to the server.
+                        Follow the steps to test the honeypot:<br>
+                            1. To check your username:
+                        <pre class="pre-scrollable">uname -a<code class="html"></code></pre>
+                            2. 
 
                         </p>
                         <p><b>By following these steps, you can set up the HoneyTrail honeypot and begin improving your
