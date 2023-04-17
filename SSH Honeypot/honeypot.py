@@ -1,9 +1,12 @@
 import paramiko
 import threading
 import socket
+from flask import Flask, render_template, request, redirect
+import queue
+from flask_cors import CORS
 
 HOST_KEY = paramiko.RSAKey.generate(2048)
-LOGFILE = 'ssh_honeypot3.log'
+LOGFILE = 'ssh_honeypot.log'
 
 class SSHServer(paramiko.ServerInterface):
     def __init__(self):
@@ -27,6 +30,7 @@ class SSHServer(paramiko.ServerInterface):
 
     def check_channel_request(self, kind, chanid):
         return paramiko.OPEN_FAILED_ADMINISTRATIVELY_PROHIBITED
+log_queue = queue.Queue()
 
 def handle_client(client):
     transport = paramiko.Transport(client)
@@ -39,38 +43,75 @@ def handle_client(client):
             channel.close()
         transport.close()
     except paramiko.SSHException as e:
-        print(f'[ERROR] SSHException: {e}')
-        with open(LOGFILE, 'a') as f:
-            f.write(f'[ERROR] SSHException: {e}\n')
+        log_queue.put((f'[ERROR] SSHException: {e}\n', 'error'))
         transport.close() 
     except EOFError as e:
-        print(f'[ERROR] EOFError: {e}')
-        with open(LOGFILE, 'a') as f:
-            f.write(f'[ERROR] EOFError: {e}\n')
+        log_queue.put((f'[ERROR] EOFError: {e}\n', 'error'))
         transport.close()
     except Exception as e:
-        print(f'[ERROR] Exception: {e}')
-        with open(LOGFILE, 'a') as f:
-            f.write(f'[ERROR] Exception: {e}\n')
-            transport.close()
+        log_queue.put((f'[ERROR] Exception: {e}\n', 'error'))
+        transport.close()
+    else:
+        log_queue.put((f'[INFO] Connection closed\n', 'info'))
+        
+app = Flask(__name__, template_folder='template')
+CORS(app)
+    
+@app.route('/index', methods=['GET'])
+def index():
+    with open(LOGFILE, 'r') as f:
+        log_data = f.read()
+    return render_template('index.html', log_data=log_data)
 
-def main():
-    ssh_port = 22
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock.bind(('0.0.0.0', ssh_port))
-    sock.listen(100)
-    print(f'Started SSH honeypot on port {ssh_port}')
+# create a global flag to indicate whether the honeypot is running
+honeypot_running = False
+
+@app.route('/start', methods=['GET', 'POST'])
+def start():
+    global honeypot_running
+    if request.method == 'POST':
+        if not honeypot_running:
+            # start the honeypot
+            ssh_port = request.form['port']
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            sock.bind(('0.0.0.0', int(ssh_port)))
+            sock.listen(100)
+            print(f'Started SSH honeypot on port {ssh_port}')
+            with open(LOGFILE, 'a') as f:
+                f.write(f'Started SSH honeypot on port {ssh_port}\n')
+            honeypot_running = True
+            while honeypot_running:
+                client, addr = sock.accept()
+                print(f'[INFO] Received connection from {addr[0]}:{addr[1]}')
+                with open(LOGFILE, 'a') as f:
+                    f.write(f'[INFO] Received connection from {addr[0]}:{addr[1]}\n')
+                client_handler = threading.Thread(target=handle_client, args=(client,))
+                client_handler.start()
+        else:
+            # honeypot is already running
+            print('Honeypot is already running')
+            with open(LOGFILE, 'a') as f:
+                f.write('Honeypot is already running\n')
+        return render_template('start.html', honeypot_running=honeypot_running)
+
+    # render the start page
+    return render_template('start.html', honeypot_running=honeypot_running)
+
+
+@app.route('/stop', methods=['POST'])
+def stop():
+    global honeypot_running
+    honeypot_running = False
+    print('Honeypot stopped')
     with open(LOGFILE, 'a') as f:
-        f.write(f'Started SSH honeypot on port {ssh_port}\n')
-    while True:
-        client, addr = sock.accept()
-        print(f'[INFO] Received connection from {addr[0]}:{addr[1]}')
-        with open(LOGFILE, 'a') as f:
-            f.write(f'[INFO] Received connection from {addr[0]}:{addr[1]}\n')
-        client_handler = threading.Thread(target=handle_client, args=(client,))
-        client_handler.start()
+        f.write('Honeypot stopped\n')
+    return render_template('start.html', honeypot_running=honeypot_running)
 
 
 if __name__ == '__main__':
-    main()
+    honeypot_thread = threading.Thread(target=index)
+    honeypot_thread.start()
+    app.debug = True 
+    app.run(host="0.0.0.0", port=80)
+    sock.listen(100)
