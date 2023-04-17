@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <style>
+      body {
+        background-color: #000000;
+        font-family: 'Roboto', sans-serif;
+        color: #fff;
+      }
+      
+      h1 {
+        text-align: center;
+        margin-top: 50px;
+      }
+      
+      table {
+        border-collapse: collapse;
+        margin: 50px auto;
+        width: 80%;
+      }
+      
+      th,
+      td {
+        text-align: left;
+        padding: 12px;
+        border: 1px solid #ddd;
+      }
+      
+      th {
+        background-color: #000000;
+        color: #fff;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      
+      pre {
+        margin: 50px auto;
+        width: 80%;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background-color: #000000;
+        padding: 20px;
+        font-size: 14px;
+      }
+      
+    </style>
+
+
+    <meta name=”viewport” content=”width=device-width, initial-scale=1″>
+    <title>SSH Honeypot Dashboard</title>
+  </head>
+  <body>
+    <h1>SSH Honeypot Dashboard</h1>
+    <p>Recent activity:</p>
+    <pre>{{ log_data }}</pre>
+  </body>
+</html>
